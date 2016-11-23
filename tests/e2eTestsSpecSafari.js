@@ -4,7 +4,7 @@
 /* global describe */
 
 describe('E2ETests', function () {
-    var appRootUrl, username, password, appSetupUrl, unassignedUsername, unassignedPassword, index, mainWindow, EC, testCount;
+    var appRootUrl, username, password, appSetupUrl, unassignedUsername, unassignedPassword, index, mainWindow, EC;
     var elementsArray = [
         'uirouter-nopopup-nohtml5-otherwise',
         'uirouter-nopopup-html5-otherwise',
@@ -32,7 +32,6 @@ describe('E2ETests', function () {
     mainWindow = null;
     EC = protractor.ExpectedConditions;
     var clientID = '58867de9-036e-48e9-8071-42f14c67949a';
-    testCount = 0;
 
     var log = function (message) {
         console.log(message);
@@ -108,7 +107,7 @@ describe('E2ETests', function () {
 
         element(by.id('cred_password_inputtext')).sendKeys(valPassword);
         var signInButton = element(by.id('cred_sign_in_button'));
-        browser.wait(EC.elementToBeClickable(signInButton), 2000, 'signin button is not clickable').then(function () {
+        browser.wait(EC.elementToBeClickable(signInButton), 1000, 'signin button is not clickable').then(function () {
             signInButton.click().then(function () {
                 if (mainWindow !== null) {
                     browser.switchTo().window(mainWindow);
@@ -197,7 +196,6 @@ describe('E2ETests', function () {
 
     beforeEach(function () {
         loadSetupPage();
-        testCount++;
     })
 
     afterEach(function () {
@@ -205,13 +203,13 @@ describe('E2ETests', function () {
             expect(handles.length).toBe(1);
         });
 
-        //browser.manage().logs().get('browser').then(function (browserLogs) {
-        //    browserLogs.forEach(function (log) {
-        //        if (log.message.indexOf('1.0.13') !== -1 || log.message.indexOf('index.html')) {
-        //            console.log(log.message);
-        //        }
-        //    });
-        //});
+        browser.manage().logs().get('browser').then(function (browserLogs) {
+            browserLogs.forEach(function (log) {
+                if (log.message.indexOf('1.0.13') !== -1 || log.message.indexOf('index.html')) {
+                    //console.log(log.message);
+                }
+            });
+        });
 
         browser.restart();
     });
@@ -223,7 +221,7 @@ describe('E2ETests', function () {
                 isHtml5 = elementId.indexOf('-html5-') > -1 ? true : false,
                 isOtherwise = elementId.indexOf('-otherwise') > -1 ? true : false,
                 isNgRoute = elementId.indexOf('ngroute') > -1 ? true : false;
-            log('Running test: ' + testCount + ' for ' + elementId);
+
             it(elementId + ': tests login button', function () {
 
                 element(by.id(elementId)).click().then(function () {
